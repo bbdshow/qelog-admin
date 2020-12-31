@@ -71,3 +71,20 @@ export function deleteAlarmRule(data) {
     data
   })
 }
+
+// ======== 日志查询
+export function fetchLoggingList(data) {
+  return request({
+    url: '/logging/list',
+    method: 'post',
+    data
+  })
+}
+
+export function fetchLoggingByTraceID(data) {
+  return request({
+    url: '/logging/traceid',
+    method: 'post',
+    data
+  })
+}
