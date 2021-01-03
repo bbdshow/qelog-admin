@@ -114,7 +114,7 @@
               style="margin-left: 10px"
               type="primary"
               icon="el-icon-search"
-              @click="getList"
+              @click="handleFilter"
             >
               筛选查询
             </el-button>
