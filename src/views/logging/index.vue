@@ -190,7 +190,7 @@
           <span>{{ row.ip }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="TraceID" width="230px" align="center">
+      <el-table-column label="TraceID" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.traceId }}</span>
         </template>

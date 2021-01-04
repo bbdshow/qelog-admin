@@ -69,8 +69,14 @@
         width="200"
         class-name="small-padding fixed-width"
       >
-        <template slot-scope="{}">
-          <el-button type="primary" size="mini"> 趋势 </el-button>
+        <template slot-scope="{ row }">
+          <el-button
+            type="primary"
+            size="mini"
+            @click="handlerTrendMetrics(row)"
+          >
+            趋势
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -81,6 +87,12 @@
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
       @pagination="getList"
+    />
+
+    <el-dialog
+      title="日志写入趋势"
+      :visible.sync="dialogFormVisible"
+      width="80%"
     />
   </div>
 </template>
@@ -104,7 +116,8 @@ export default {
         moduleName: undefined,
         dateTsSec: 0
       },
-      dateTime: new Date()
+      dateTime: new Date(),
+      dialogFormVisible: false
     }
   },
   created() {
@@ -124,6 +137,10 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handlerTrendMetrics(row) {
+      this.dialogFormVisible = true
+      console.log(row)
     },
     calcSize(val) {
       let divCount = 0
