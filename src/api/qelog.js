@@ -88,3 +88,18 @@ export function fetchLoggingByTraceID(data) {
     data
   })
 }
+
+export function fetchMetricsCount() {
+  return request({
+    url: '/metrics/count',
+    method: 'get'
+  })
+}
+
+export function fetchMetricsModuleList(query) {
+  return request({
+    url: '/metrics/module/list',
+    method: 'get',
+    params: query
+  })
+}

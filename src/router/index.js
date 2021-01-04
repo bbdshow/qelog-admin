@@ -125,6 +125,21 @@ export const constantRoutes = [{
       noCache: true
     }
   }]
+},
+{
+  path: '/metrics',
+  component: Layout,
+  redirect: '/metrics/index',
+  children: [{
+    path: 'index',
+    component: () => import('@/views/metrics/index'),
+    name: 'Metrics',
+    meta: {
+      title: '状态信息',
+      icon: 'dashboard',
+      noCache: true
+    }
+  }]
 }
 ]
 

@@ -56,6 +56,7 @@
               style="margin-left: 10px"
               type="primary"
               icon="el-icon-search"
+              @click="handleTraceID"
             >
               跟踪查询
             </el-button>
@@ -120,6 +121,32 @@
             </el-button>
           </el-col>
         </el-row>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item width="300px">
+              <el-input
+                v-model="listQuery.conditionOne"
+                placeholder="筛选条件一"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col v-if="listQuery.conditionOne" :span="8">
+            <el-form-item width="300px">
+              <el-input
+                v-model="listQuery.conditionTwo"
+                placeholder="筛选条件二"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col v-if="listQuery.conditionTwo" :span="8">
+            <el-form-item width="300px">
+              <el-input
+                v-model="listQuery.conditionThree"
+                placeholder="筛选条件三"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
 
@@ -132,38 +159,38 @@
       highlight-current-row
       style="width: 100%"
     >
-      <el-table-column label="时间" width="180px" align="center">
+      <el-table-column label="时间" width="200px" align="center">
         <template slot-scope="{ row }">
           <span>{{
             row.tsMill | parseTime("{y}-{m}-{d} {h}:{i}:{s}.{l}")
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="等级" width="90px" align="center">
+      <el-table-column label="等级" width="100px" align="center">
         <template slot-scope="{ row }">
           <el-tag :type="levelObj(row.level).type">{{
             levelObj(row.level).value
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="短消息" width="200px" align="center">
+      <el-table-column label="短消息" width="300px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.short }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="详情" width="700px" align="center">
+      <el-table-column label="详情" width="800px" align="center">
         <template slot-scope="{ row }">
           <el-link type="primary" @click="fullClick(row.full)">{{
             row.full
           }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="IP" width="80px" align="center">
+      <el-table-column label="IP" width="100px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.ip }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="TraceID" width="150px" align="center">
+      <el-table-column label="TraceID" width="230px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.traceId }}</span>
         </template>
@@ -196,8 +223,8 @@
 <script>
 import {
   fetchModuleList,
-  fetchLoggingList
-  // fetchLoggingTraceID
+  fetchLoggingList,
+  fetchLoggingByTraceID
 } from '@/api/qelog'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import JSONPretty from 'vue-json-pretty'
@@ -330,6 +357,20 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handleTraceID() {
+      this.listLoading = true
+      const { moduleName, dbIndex } = this.listQuery
+      const data = {
+        moduleName: moduleName,
+        dbIndex: dbIndex,
+        traceId: this.traceId
+      }
+      fetchLoggingByTraceID(data).then((response) => {
+        this.list = response.data.list
+        this.total = response.data.count
+        this.listLoading = false
+      })
     },
     resetListQuery() {
       this.module = {
