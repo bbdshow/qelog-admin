@@ -24,12 +24,19 @@ export function calcSize(val) {
 }
 
 export function calcNum(val) {
+  const old = val
   let divCount = 0
   for (; val > 10000;) {
     divCount++
     val = val / 10
     if (divCount >= 4) {
       break
+    }
+  }
+  if (divCount <= 2) {
+    return {
+      number: old,
+      unit: ''
     }
   }
   switch (divCount) {

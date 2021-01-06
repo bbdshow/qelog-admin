@@ -157,9 +157,18 @@ export default {
   },
   methods: {
     getList() {
+      if (this.dateTime) {
+        this.listQuery.dateTsSec = Math.ceil(this.dateTime.getTime() / 1e3)
+      } else {
+        this.$notify({
+          title: '参数异常',
+          message: '时间必传',
+          type: 'error',
+          duration: 2000
+        })
+        return
+      }
       this.listLoading = true
-      this.listQuery.dateTsSec = Math.ceil(this.dateTime.getTime() / 1e3)
-
       fetchMetricsModuleList(this.listQuery).then((response) => {
         this.list = response.data.list
         this.total = response.data.count

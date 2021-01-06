@@ -52,7 +52,7 @@ export default {
       this.showData = val
       const cn = calcNum(this.showData.number)
       const cs = calcSize(this.showData.size)
-      this.title = `总条数: ${cn.number} ${
+      this.title = `总条数: ${cn.number.toFixed(2)} ${
         cn.unit
       }  总大小: ${cs.number.toFixed(4)} ${cs.unit}`
       this.initChart()
@@ -136,10 +136,15 @@ export default {
       return series
     },
     initChart() {
-      console.log('1111111111111111')
       this.chart = echarts.init(document.getElementById(this.id))
       const xData = this.showData.xData
-      console.log('22222222222', xData)
+      const start = (function() {
+        const length = xData.length
+        if (length > 6) {
+          const v = (length / 6) * 5
+          return v >= 90 ? 90 : v
+        }
+      })()
       const series = this.formatSeries()
       this.chart.setOption({
         backgroundColor: '#344b58',
@@ -234,7 +239,7 @@ export default {
             height: 30,
             xAxisIndex: [0],
             bottom: 30,
-            start: 40,
+            start: start,
             end: 100,
             handleIcon:
               'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',

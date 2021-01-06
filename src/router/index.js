@@ -8,8 +8,6 @@ import Layout from '@/layout'
 
 /* Router Modules */
 
-import chartsRouter from './modules/charts'
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -68,17 +66,7 @@ export const constantRoutes = [{
 {
   path: '/',
   component: Layout,
-  redirect: '/dashboard',
-  children: [{
-    path: 'dashboard',
-    component: () => import('@/views/dashboard/index'),
-    name: 'Dashboard',
-    meta: {
-      title: 'Dashboard',
-      icon: 'dashboard',
-      affix: true
-    }
-  }]
+  redirect: '/logging'
 },
 // 新建页面
 {
@@ -149,8 +137,6 @@ export const constantRoutes = [{
  */
 export const asyncRoutes = [
   /** when your routing map is too long, you can split it into small modules **/
-
-  chartsRouter,
 
   // 404 page must be placed at the end !!!
   {
