@@ -103,3 +103,11 @@ export function fetchMetricsModuleList(query) {
     params: query
   })
 }
+
+export function fetchMetricsModuleTrend(query) {
+  return request({
+    url: '/metrics/module/trend',
+    method: 'get',
+    params: query
+  })
+}

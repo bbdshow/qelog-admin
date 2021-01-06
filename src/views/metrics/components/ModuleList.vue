@@ -73,7 +73,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="handlerTrendMetrics(row)"
+            @click="handlerTrendMetrics(row.moduleName)"
           >
             趋势
           </el-button>
@@ -89,21 +89,48 @@
       @pagination="getList"
     />
 
-    <el-dialog
-      title="日志写入趋势"
-      :visible.sync="dialogFormVisible"
-      width="80%"
-    />
+    <el-dialog title="写入趋势" :visible.sync="dialogFormVisible" width="90%">
+      <el-row :gutter="40">
+        <el-col :span="4">
+          <el-select
+            v-model="trendQuery.lastDay"
+            clearable
+            class="filter-item"
+            placeholder="选天数"
+          >
+            <el-option
+              v-for="item in [1, 2, 3, 4, 5, 6, 7]"
+              :key="item"
+              :label="item + '天'"
+              :value="item"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" @click="handlerTrendMetrics(null)">
+            查询
+          </el-button>
+        </el-col>
+      </el-row>
+      <div class="chart-container" style="margin-top: 10px">
+        <chart width="100%" height="100%" :show-data="trendData" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchMetricsModuleList } from '@/api/qelog'
+import { fetchMetricsModuleList, fetchMetricsModuleTrend } from '@/api/qelog'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Chart from './Chart'
+import { calcSize } from '@/utils/calc'
 
 export default {
   name: 'ModuleList',
-  components: { Pagination },
+  components: {
+    Pagination,
+    Chart
+  },
   data() {
     return {
       tableKey: 0,
@@ -116,6 +143,11 @@ export default {
         moduleName: undefined,
         dateTsSec: 0
       },
+      trendQuery: {
+        moduleName: undefined,
+        lastDay: 1
+      },
+      trendData: null,
       dateTime: new Date(),
       dialogFormVisible: false
     }
@@ -138,28 +170,32 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handlerTrendMetrics(row) {
-      this.dialogFormVisible = true
-      console.log(row)
+    handlerTrendMetrics(moduleName) {
+      this.trendQuery.moduleName =
+        moduleName == null ? this.trendQuery.moduleName : moduleName
+      if (moduleName) {
+        this.trendQuery.lastDay = 1
+      }
+      fetchMetricsModuleTrend(this.trendQuery).then((response) => {
+        this.trendData = response.data
+        this.dialogFormVisible = true
+      })
     },
+    calcTrendList() {},
     calcSize(val) {
-      let divCount = 0
-      for (; val > 1024;) {
-        divCount++
-        val = val / 1024
-        if (divCount >= 2) {
-          break
-        }
-      }
-      switch (divCount) {
-        case 0:
-          return { number: val, unit: 'B' }
-        case 1:
-          return { number: val, unit: 'KB' }
-        case 2:
-          return { number: val, unit: 'MB' }
-      }
+      return calcSize(val)
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 84px);
+}
+.chart-dialog {
+  width: 90%;
+}
+</style>
