@@ -27,20 +27,16 @@
     ]
   },
   "keywords": [
+    "qelog-admin",
     "vue",
-    "admin",
-    "dashboard",
-    "element-ui",
-    "boilerplate",
-    "admin-template",
     "management-system"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PanJiaChen/vue-element-admin.git"
+    "url": "git+https://github.com/huzhongqing/qelog-admin.git"
   },
   "bugs": {
-    "url": "https://github.com/PanJiaChen/vue-element-admin/issues"
+    "url": "https://github.com/huzhongqing/qelog-admin/issues"
   },
   "dependencies": {
     "axios": "0.18.1",
@@ -54,14 +50,12 @@
     "fuse.js": "3.4.4",
     "js-cookie": "2.2.0",
     "jsonlint": "1.6.3",
-    "jszip": "3.2.1",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
     "screenfull": "4.2.0",
     "script-loader": "0.7.2",
     "sortablejs": "1.8.4",
-    "tui-editor": "1.3.3",
     "vue": "2.6.10",
     "vue-count-to": "1.0.13",
     "vue-json-pretty": "^1.6.2",
