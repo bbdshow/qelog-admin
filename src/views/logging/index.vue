@@ -68,6 +68,7 @@
               v-model="beginTime"
               type="datetime"
               format="yyyy-MM-dd HH:mm:ss"
+              :picker-options="startTimeSelect"
               placeholder="开始时间"
               style="width: 100%"
             />
@@ -77,6 +78,7 @@
               v-model="endTime"
               type="datetime"
               format="yyyy-MM-dd HH:mm:ss"
+              :picker-options="endTimeSelect"
               placeholder="结束时间"
               style="width: 100%"
             />
@@ -228,6 +230,7 @@ import {
 } from '@/api/qelog'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import JSONPretty from 'vue-json-pretty'
+import { startTimeSelect, endTimeSelect } from '@/utils/select.js'
 
 export default {
   name: 'Logging',
@@ -253,6 +256,9 @@ export default {
       traceId: '',
       beginTime: undefined,
       endTime: undefined,
+      startTimeSelect: startTimeSelect,
+      endTimeSelect: endTimeSelect,
+
       historyDbIndex: [],
 
       levelSorts: [
