@@ -180,7 +180,7 @@
           <span>{{ row.short }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="详情" width="500px" align="center">
+      <el-table-column label="详情" align="center">
         <template slot-scope="{ row }">
           <el-link type="primary" @click="fullClick(row.full)">{{
             row.full
@@ -207,7 +207,7 @@
           <span>{{ row.ip }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="TraceID" align="center">
+      <el-table-column label="TraceID" width="200px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.traceId }}</span>
         </template>
