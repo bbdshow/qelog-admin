@@ -161,7 +161,7 @@
       highlight-current-row
       style="width: 100%"
     >
-      <el-table-column label="时间" width="200px" align="center">
+      <el-table-column label="时间" width="150px" align="center">
         <template slot-scope="{ row }">
           <span>{{
             row.tsMill | parseTime("{y}-{m}-{d} {h}:{i}:{s}.{l}")
@@ -175,16 +175,31 @@
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="短消息" width="300px" align="center">
+      <el-table-column label="短消息" width="250px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.short }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="详情" width="800px" align="center">
+      <el-table-column label="详情" width="500px" align="center">
         <template slot-scope="{ row }">
           <el-link type="primary" @click="fullClick(row.full)">{{
             row.full
           }}</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="条件一" width="100px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.conditionOne }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="条件二" width="100px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.conditionTwo }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="条件三" width="100px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.conditionThree }}</span>
         </template>
       </el-table-column>
       <el-table-column label="IP" width="100px" align="center">
