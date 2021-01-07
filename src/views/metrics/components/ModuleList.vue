@@ -124,6 +124,7 @@ import { fetchMetricsModuleList, fetchMetricsModuleTrend } from '@/api/qelog'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Chart from './Chart'
 import { calcSize } from '@/utils/calc'
+import { dateTime } from '@/utils/select'
 
 export default {
   name: 'ModuleList',
@@ -148,7 +149,7 @@ export default {
         lastDay: 1
       },
       trendData: null,
-      dateTime: new Date(),
+      dateTime: dateTime,
       dialogFormVisible: false
     }
   },

@@ -81,7 +81,13 @@ const endTimeSelect = {
   }]
 }
 
+const dateTime = (function() {
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+}())
+
 export {
   startTimeSelect,
-  endTimeSelect
+  endTimeSelect,
+  dateTime
 }
