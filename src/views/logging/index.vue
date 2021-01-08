@@ -364,10 +364,10 @@ export default {
       }
 
       if (this.beginTime) {
-        data.beginTsSec = this.beginTime.getTime() / 1e3
+        data.beginTsSec = Math.ceil(this.beginTime.getTime() / 1e3)
       }
       if (this.endTime) {
-        data.endTsSec = this.endTime.getTime() / 1e3
+        data.endTsSec = Math.ceil(this.endTime.getTime() / 1e3)
       }
       fetchLoggingList(data).then((response) => {
         this.list = response.data.list
