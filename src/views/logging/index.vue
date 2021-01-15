@@ -202,7 +202,7 @@
           <span>{{ row.conditionThree }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IP" width="80px" align="center">
+      <el-table-column label="IP" width="100px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.ip }}</span>
         </template>
