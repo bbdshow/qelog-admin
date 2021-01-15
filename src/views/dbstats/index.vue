@@ -31,19 +31,19 @@
       </el-table-column>
       <el-table-column label="数据总大小" width="120px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ calcSize(row.dataSize).number.toFixed(4) }}</span>
+          <span>{{ calcSize(row.dataSize).number.toFixed(3) }}</span>
           <span>{{ calcSize(row.dataSize).unit }}</span>
         </template>
       </el-table-column>
       <el-table-column label="存储总大小" width="120px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ calcSize(row.storageSize).number.toFixed(4) }}</span>
+          <span>{{ calcSize(row.storageSize).number.toFixed(3) }}</span>
           <span>{{ calcSize(row.storageSize).unit }}</span>
         </template>
       </el-table-column>
       <el-table-column label="索引总大小" width="120px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ calcSize(row.indexSize).number.toFixed(4) }}</span>
+          <span>{{ calcSize(row.indexSize).number.toFixed(3) }}</span>
           <span>{{ calcSize(row.indexSize).unit }}</span>
         </template>
       </el-table-column>
@@ -106,13 +106,13 @@
 
         <el-table-column label="数据总大小" width="120px" align="center">
           <template slot-scope="{ row }">
-            <span>{{ calcSize(row.size).number.toFixed(4) }}</span>
+            <span>{{ calcSize(row.size).number.toFixed(3) }}</span>
             <span>{{ calcSize(row.size).unit }}</span>
           </template>
         </el-table-column>
         <el-table-column label="存储总大小" width="120px" align="center">
           <template slot-scope="{ row }">
-            <span>{{ calcSize(row.storageSize).number.toFixed(4) }}</span>
+            <span>{{ calcSize(row.storageSize).number.toFixed(3) }}</span>
             <span>{{ calcSize(row.storageSize).unit }}</span>
           </template>
         </el-table-column>
@@ -124,7 +124,7 @@
         </el-table-column>
         <el-table-column label="索引总大小" width="120px" align="center">
           <template slot-scope="{ row }">
-            <span>{{ calcSize(row.totalIndexSize).number.toFixed(4) }}</span>
+            <span>{{ calcSize(row.totalIndexSize).number.toFixed(3) }}</span>
             <span>{{ calcSize(row.totalIndexSize).unit }}</span>
           </template>
         </el-table-column>
@@ -132,7 +132,7 @@
           <template slot-scope="{ row }">
             <div v-for="(v, k) in row.indexSizes" :key="k">
               <span>名称:{{ k }} =></span>
-              <span>大小:{{ calcSize(v).number.toFixed(2) }}</span>
+              <span>大小:{{ calcSize(v).number.toFixed(3) }}</span>
               <span>{{ calcSize(v).unit }}</span>
             </div>
           </template>
@@ -140,7 +140,7 @@
 
         <el-table-column label="文档总条数" width="120px" align="center">
           <template slot-scope="{ row }">
-            <span>{{ calcNum(row.count).number }}</span>
+            <span>{{ calcNum(row.count).number.toFixed(3) }}</span>
             <span>{{ calcNum(row.count).unit }}</span>
           </template>
         </el-table-column>
