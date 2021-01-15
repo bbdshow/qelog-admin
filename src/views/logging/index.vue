@@ -161,21 +161,21 @@
       highlight-current-row
       style="width: 100%"
     >
-      <el-table-column label="时间" width="150px" align="center">
+      <el-table-column label="时间" width="180px" align="center">
         <template slot-scope="{ row }">
           <span>{{
             row.tsMill | parseTime("{y}-{m}-{d} {h}:{i}:{s}.{l}")
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="等级" width="100px" align="center">
+      <el-table-column label="等级" width="90px" align="center">
         <template slot-scope="{ row }">
           <el-tag :type="levelObj(row.level).type">{{
             levelObj(row.level).value
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="短消息" width="250px" align="center">
+      <el-table-column label="短消息" width="200px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.short }}</span>
         </template>
@@ -202,12 +202,12 @@
           <span>{{ row.conditionThree }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IP" width="100px" align="center">
+      <el-table-column label="IP" width="80px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.ip }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="TraceID" width="200px" align="center">
+      <el-table-column label="TraceID" width="205px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.traceId }}</span>
         </template>
