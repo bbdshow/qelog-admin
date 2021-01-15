@@ -1,19 +1,15 @@
 <template>
   <div class="chart-container">
-    <count height="100%" width="100%" />
-
     <module-list height="100%" width="100%" />
   </div>
 </template>
 
 <script>
 import ModuleList from './components/ModuleList'
-import Count from './components/Count'
 
 export default {
   name: 'Metrics',
   components: {
-    Count,
     ModuleList
   }
 }

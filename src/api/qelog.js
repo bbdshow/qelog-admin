@@ -89,10 +89,28 @@ export function fetchLoggingByTraceID(data) {
   })
 }
 
-export function fetchMetricsCount() {
+export function deleteLoggingCollection(data) {
   return request({
-    url: '/metrics/count',
+    url: '/logging/collection',
+    method: 'delete',
+    data
+  })
+}
+
+// ==== 统计
+
+export function fetchMetricsDBStats() {
+  return request({
+    url: '/metrics/dbstats',
     method: 'get'
+  })
+}
+
+export function fetchMetricsCollStats(query) {
+  return request({
+    url: '/metrics/collstats',
+    method: 'get',
+    params: query
   })
 }
 

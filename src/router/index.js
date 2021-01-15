@@ -118,16 +118,31 @@ export const constantRoutes = [{
   path: '/metrics',
   component: Layout,
   redirect: '/metrics/index',
+  meta: {
+    title: '统计信息',
+    icon: 'dashboard',
+    noCache: true
+  },
   children: [{
     path: 'index',
     component: () => import('@/views/metrics/index'),
-    name: 'Metrics',
+    name: 'ModuleMetrics',
     meta: {
-      title: '状态信息',
-      icon: 'dashboard',
+      title: '日志趋势',
+
       noCache: true
     }
-  }]
+  },
+  {
+    path: 'dbstats',
+    component: () => import('@/views/dbstats/index'),
+    name: 'DBStats',
+    meta: {
+      title: '数据容量',
+      noCache: true
+    }
+  }
+  ]
 }
 ]
 
