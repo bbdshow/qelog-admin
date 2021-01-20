@@ -180,34 +180,34 @@
           <span>{{ row.short }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="详情" align="center">
+      <el-table-column label="详情" width="700px" align="center">
         <template slot-scope="{ row }">
           <el-link type="primary" @click="fullClick(row.full)">{{
             row.full
           }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="条件一" width="100px" align="center">
+      <el-table-column label="条件一" width="150px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.conditionOne }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="条件二" width="100px" align="center">
+      <el-table-column label="条件二" width="150px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.conditionTwo }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="条件三" width="100px" align="center">
+      <el-table-column label="条件三" width="150px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.conditionThree }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IP" width="100px" align="center">
+      <el-table-column label="IP" width="125px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.ip }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="TraceID" width="205px" align="center">
+      <el-table-column label="TraceID" width="220px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.traceId }}</span>
         </template>
