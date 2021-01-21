@@ -49,18 +49,18 @@
       </el-table-column>
       <el-table-column label="文档总条数" width="120px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ calcNum(row.objects).number }}</span>
+          <span>{{ calcNum(row.objects).number.toFixed(3) }}</span>
           <span>{{ calcNum(row.objects).unit }}</span>
         </template>
       </el-table-column>
       <el-table-column label="集合总数" width="100px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ calcNum(row.collections).number }}</span>
+          <span>{{ row.collections }}</span>
         </template>
       </el-table-column>
       <el-table-column label="索引总数" width="100px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ calcNum(row.indexs).number }}</span>
+          <span>{{ row.indexs }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -118,7 +118,7 @@
         </el-table-column>
         <el-table-column label="平均对象大小" width="150px" align="center">
           <template slot-scope="{ row }">
-            <span>{{ calcSize(row.avgObjSize).number }}</span>
+            <span>{{ calcSize(row.avgObjSize).number.toFixed(3) }}</span>
             <span>{{ calcSize(row.avgObjSize).unit }}</span>
           </template>
         </el-table-column>

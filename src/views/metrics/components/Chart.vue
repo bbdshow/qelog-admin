@@ -52,9 +52,10 @@ export default {
       this.showData = val
       const cn = calcNum(this.showData.number)
       const cs = calcSize(this.showData.size)
-      this.title = `总条数: ${cn.number.toFixed(2)} ${
+      this.title = `总条数: ${cn.number.toFixed(3)} ${
         cn.unit
-      }  总大小: ${cs.number.toFixed(4)} ${cs.unit}`
+      }  总大小: ${cs.number.toFixed(3)} ${cs.unit}`
+      this.beforeDestroy()
       this.initChart()
     }
   },
@@ -66,10 +67,11 @@ export default {
       this.noData = false
       const cn = calcNum(this.showData.number)
       const cs = calcSize(this.showData.size)
-      this.title = `总条数: ${cn.number} ${
+      this.title = `总条数: ${cn.number.toFixed(3)} ${
         cn.unit
-      }  总大小: ${cs.number.toFixed(4)} ${cs.unit}`
+      }  总大小: ${cs.number.toFixed(3)} ${cs.unit}`
     }
+    this.beforeDestroy()
     // set title
     this.initChart()
   },
