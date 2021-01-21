@@ -55,7 +55,7 @@ export default {
       this.title = `总条数: ${cn.number.toFixed(3)} ${
         cn.unit
       }  总大小: ${cs.number.toFixed(3)} ${cs.unit}`
-      this.beforeDestroy()
+      this.destoryChart()
       this.initChart()
     }
   },
@@ -71,18 +71,21 @@ export default {
         cn.unit
       }  总大小: ${cs.number.toFixed(3)} ${cs.unit}`
     }
-    this.beforeDestroy()
+    this.destoryChart()
     // set title
     this.initChart()
   },
   beforeDestroy() {
-    if (!this.chart) {
-      return
-    }
-    this.chart.dispose()
-    this.chart = null
+    this.destoryChart()
   },
   methods: {
+    destoryChart() {
+      if (!this.chart) {
+        return
+      }
+      this.chart.dispose()
+      this.chart = null
+    },
     formatSeries() {
       const series = []
       this.showData.levelSeries.forEach((item, index) => {
