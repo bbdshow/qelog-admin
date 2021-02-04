@@ -295,32 +295,10 @@ export default {
             trigger: 'change'
           }
         ],
-        level: [
-          {
-            required: true,
-            message: 'level is required',
-            trigger: 'change'
-          }
-        ],
-        method: [
-          {
-            required: true,
-            message: 'method is required',
-            trigger: 'change'
-          }
-        ],
         hookUrl: [
           {
             required: true,
             message: 'hookUrl is required',
-            trigger: 'change'
-          }
-        ],
-        rateSec: [
-          {
-            type: 'number',
-            required: true,
-            message: 'rateSec is required',
             trigger: 'change'
           }
         ]
