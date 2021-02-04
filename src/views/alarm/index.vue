@@ -249,7 +249,6 @@ export default {
         { index: 1, value: '开启' }
       ],
       levelSorts: [
-        { index: -2, value: 'Unknown' },
         { index: -1, value: 'DEBUG' },
         { index: 0, value: 'INFO' },
         { index: 1, value: 'WARN' },
@@ -259,7 +258,6 @@ export default {
         { index: 5, value: 'FATAL' }
       ],
       methodSorts: [
-        { index: 0, value: 'Unknown' },
         { index: 1, value: 'DingDing' }
       ],
       alarmRule: {
