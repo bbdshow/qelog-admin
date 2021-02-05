@@ -101,12 +101,12 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="7">
+          <el-col v-if="listQuery.level" :span="7">
             <el-form-item width="300px">
               <el-input v-model="listQuery.short" placeholder="请输入短消息" />
             </el-form-item>
           </el-col>
-          <el-col :span="3">
+          <el-col v-if="listQuery.short" :span="3">
             <el-form-item width="300px">
               <el-input v-model="listQuery.ip" placeholder="请输入IP" />
             </el-form-item>
@@ -123,7 +123,7 @@
             </el-button>
           </el-col>
         </el-row>
-        <el-row :gutter="10">
+        <el-row v-if="listQuery.short" :gutter="10">
           <el-col :span="8">
             <el-form-item width="300px">
               <el-input
