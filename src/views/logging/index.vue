@@ -101,8 +101,9 @@
             </el-form-item>
           </el-col>
 
-          <el-col v-if="listQuery.level" :span="7">
+          <el-col v-if="listQuery.level != undefined && listQuery.level !== '' && listQuery.level >= -1" :span="7">
             <el-form-item width="300px">
+
               <el-input v-model="listQuery.short" placeholder="请输入短消息" />
             </el-form-item>
           </el-col>
