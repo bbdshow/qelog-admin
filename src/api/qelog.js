@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchDBIndex(query) {
   return request({
-    url: '/db-index',
+    url: '/dbIndex',
     method: 'get'
   })
 }
@@ -42,7 +42,7 @@ export function deleteModule(data) {
 // =========== Alarm
 export function fetchAlarmRuleList(query) {
   return request({
-    url: '/alarm-rule/list',
+    url: '/alarmRule/list',
     method: 'get',
     params: query
   })
@@ -50,7 +50,7 @@ export function fetchAlarmRuleList(query) {
 
 export function createAlarmRule(data) {
   return request({
-    url: '/alarm-rule',
+    url: '/alarmRule',
     method: 'post',
     data
   })
@@ -58,7 +58,7 @@ export function createAlarmRule(data) {
 
 export function updateAlarmRule(data) {
   return request({
-    url: '/alarm-rule',
+    url: '/alarmRule',
     method: 'put',
     data
   })
@@ -66,14 +66,14 @@ export function updateAlarmRule(data) {
 
 export function deleteAlarmRule(data) {
   return request({
-    url: '/alarm-rule',
+    url: '/alarmRule',
     method: 'delete',
     data
   })
 }
 export function fetchHookURLList(query) {
   return request({
-    url: '/alarm-rule/hook/list',
+    url: '/alarmRule/hook/list',
     method: 'get',
     params: query
   })
@@ -81,7 +81,7 @@ export function fetchHookURLList(query) {
 
 export function createHookURL(data) {
   return request({
-    url: '/alarm-rule/hook',
+    url: '/alarmRule/hook',
     method: 'post',
     data
   })
@@ -89,7 +89,7 @@ export function createHookURL(data) {
 
 export function updateHookURL(data) {
   return request({
-    url: '/alarm-rule/hook',
+    url: '/alarmRule/hook',
     method: 'put',
     data
   })
@@ -97,14 +97,14 @@ export function updateHookURL(data) {
 
 export function deleteHookURL(data) {
   return request({
-    url: '/alarm-rule/hook',
+    url: '/alarmRule/hook',
     method: 'delete',
     data
   })
 }
 export function pingHookURL(query) {
   return request({
-    url: '/alarm-rule/hook/ping',
+    url: '/alarmRule/hook/ping',
     method: 'get',
     params: query
   })
@@ -139,14 +139,14 @@ export function deleteLoggingCollection(data) {
 
 export function fetchMetricsDBStats() {
   return request({
-    url: '/metrics/dbstats',
+    url: '/metrics/dbStats',
     method: 'get'
   })
 }
 
 export function fetchMetricsCollStats(query) {
   return request({
-    url: '/metrics/collstats',
+    url: '/metrics/collStats',
     method: 'get',
     params: query
   })
