@@ -2,33 +2,19 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="listQuery.moduleName"
-        placeholder="模块名称"
+        v-model="listQuery.name"
+        placeholder="名称"
         style="width: 200px"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-input
-        v-model="listQuery.short"
-        placeholder="短消息"
+        v-model="listQuery.keyWord"
+        placeholder="关键字"
         style="width: 200px"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
-
-      <el-select
-        v-model="listQuery.enable"
-        class="filter-item"
-        placeholder="状态"
-      >
-        <el-option
-          v-for="item in enableSorts"
-          :key="item.index"
-          :label="item.value"
-          :value="item.index"
-        />
-      </el-select>
-
       <el-button
         class="filter-item"
         type="primary"
@@ -62,46 +48,27 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" prop="enabel" align="center" width="100px">
+      <el-table-column label="名称" min-width="100px">
         <template slot-scope="{ row }">
-          <el-tag :type="row.enable | enableFilter">
-            {{ row.enable }}
-          </el-tag>
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="短消息" min-width="100px">
-        <template slot-scope="{ row }">
-          <span>{{ row.short }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="等级" prop="enabel" align="center" width="100px">
-        <template slot-scope="{ row }">
-          {{ sortsFilter(row.level, "levelSorts") }}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="标签" min-width="50px" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.tag }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="频率" min-width="50px" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ "1/" + row.rateSec + "s" }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="通知方式" min-width="50px" align="center">
+      <el-table-column label="通知方式" min-width="100px" align="center">
         <template slot-scope="{ row }">
           <span> {{ sortsFilter(row.method, "methodSorts") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HookURL" min-width="50px" align="center">
+
+      <el-table-column label="关键字" min-width="150px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.hookId !='' ? hooksMap[row.hookId].name: '' }}</span>
+          <span>{{ row.keyWord }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="URL" width="300px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.url }}</span>
         </template>
       </el-table-column>
 
@@ -114,6 +81,9 @@
         <template slot-scope="{ row, $index }">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
+          </el-button>
+          <el-button type="success" size="mini" @click="pingHookURL(row.id)">
+            PING
           </el-button>
 
           <el-button
@@ -139,56 +109,23 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
-        :model="alarmRule"
+        :model="hookUrl"
         :rules="dialogStatus !== 'delete' ? rules : {}"
         :disabled="dialogStatus === 'delete'"
         label-position="left"
         label-width="120px"
         style="width: 400px; margin-left: 50px"
       >
-
-        <el-form-item label="模块名" prop="moduleName">
-          <el-select
-            v-model="alarmRule.moduleName"
-            :remote-method="getModuleList"
-            filterable
-            remote
-            class="filter-item"
-            placeholder="请选择模块名"
-            style="width: 100%"
+        <el-form-item label="名称" prop="name">
+          <el-input
+            v-model="hookUrl.name"
             :disabled="dialogStatus != 'create'"
-          >
-            <el-option
-              v-for="item in modules"
-              :key="item.id"
-              :label="item.moduleName"
-              :value="item.moduleName"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="短消息" prop="short">
-          <el-input v-model="alarmRule.short" />
-        </el-form-item>
-
-        <el-form-item label="等级" prop="level" min-width="80px">
-          <el-select
-            v-model="alarmRule.level"
-            class="filter-item"
-            placeholder="Please select"
-          >
-            <el-option
-              v-for="item in levelSorts"
-              :key="item.index"
-              :label="item.value"
-              :value="item.index"
-            />
-          </el-select>
+          />
         </el-form-item>
 
         <el-form-item label="通知方式" prop="method" width="110px">
           <el-select
-            v-model="alarmRule.method"
+            v-model="hookUrl.method"
             class="filter-item"
             placeholder="Please select"
           >
@@ -201,41 +138,13 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="HookURL">
-          <el-select
-            v-model="alarmRule.hookId"
-            filterable
-            class="filter-item"
-            placeholder="请选择HookURL"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="item in hooks"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
+        <el-form-item label="HookURL" prop="url">
+          <el-input v-model="hookUrl.url" />
+        </el-form-item>
+        <el-form-item label="关键字" prop="keyWord">
+          <el-input v-model="hookUrl.keyWord" />
         </el-form-item>
 
-        <el-form-item label="频率间隔(秒)" prop="rateSec">
-          <el-input-number v-model="alarmRule.rateSec" />
-        </el-form-item>
-        <el-form-item
-          v-if="dialogStatus == 'update'"
-          label="关闭/启动"
-          prop="enable"
-        >
-          <el-switch
-            v-model="alarmRule.enable"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-          />
-        </el-form-item>
-
-        <el-form-item label="标签" prop="tag">
-          <el-input v-model="alarmRule.tag" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false"> 取消 </el-button>
@@ -249,17 +158,16 @@
 
 <script>
 import {
-  fetchAlarmRuleList,
-  createAlarmRule,
-  updateAlarmRule,
-  deleteAlarmRule,
   fetchHookURLList,
-  fetchModuleList
+  createHookURL,
+  updateHookURL,
+  deleteHookURL,
+  pingHookURL
 } from '@/api/qelog'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'Alarm',
+  name: 'Hook',
   components: { Pagination },
   filters: {
     enableFilter(enable) {
@@ -273,42 +181,21 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
+        id: undefined,
         page: 1,
         limit: 20,
-        moduleName: '',
-        enable: -1,
-        short: ''
+        name: '',
+        keyWord: ''
       },
-      hookQuery: {
-        name: ''
-      },
-      enableSorts: [
-        { index: -1, value: '状态' },
-        { index: 0, value: '关闭' },
-        { index: 1, value: '开启' }
-      ],
-      levelSorts: [
-        { index: -1, value: 'DEBUG' },
-        { index: 0, value: 'INFO' },
-        { index: 1, value: 'WARN' },
-        { index: 2, value: 'ERROR' },
-        { index: 3, value: 'DPANIC' },
-        { index: 4, value: 'PANIC' },
-        { index: 5, value: 'FATAL' }
-      ],
       methodSorts: [
         { index: 1, value: 'DingDing' }
       ],
-      alarmRule: {
+      hookUrl: {
         id: undefined,
-        moduleName: '',
-        short: '',
-        level: 0,
-        tag: '',
-        rateSec: 30,
+        name: '',
+        keyWord: '',
         method: 1,
-        hookId: '',
-        enabel: -1
+        url: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -317,28 +204,18 @@ export default {
         create: '创建',
         delete: '删除'
       },
-      hooks: [],
-      hooksMap: [],
-      modules: [],
       rules: {
-        moduleName: [
+        name: [
           {
             required: true,
-            message: 'moduleName is required',
+            message: 'name is required',
             trigger: 'change'
           }
         ],
-        short: [
+        url: [
           {
             required: true,
-            message: 'short is required',
-            trigger: 'change'
-          }
-        ],
-        hookId: [
-          {
-            required: true,
-            message: 'hookId is required',
+            message: 'url is required',
             trigger: 'change'
           }
         ]
@@ -347,8 +224,6 @@ export default {
   },
   created() {
     this.getList()
-    this.fetchHookURLList()
-    this.fetchModuleList(undefined)
   },
   methods: {
     sortsFilter(v, typ) {
@@ -364,7 +239,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchAlarmRuleList(this.listQuery).then((response) => {
+      fetchHookURLList(this.listQuery).then((response) => {
         this.list = response.data.list
         this.total = response.data.count
         setTimeout(() => {
@@ -376,75 +251,39 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    resetAlarmRule() {
-      this.alarmRule = {
+    resetHookURL() {
+      this.hookUrl = {
         id: undefined,
-        moduleName: '',
-        short: '',
-        level: -1,
-        tag: '',
-        rateSec: 30,
+        name: '',
+        keyWord: '',
         method: 1,
-        hookId: '',
-        enabel: true
+        url: ''
+      }
+    },
+    pingHookURL(id) {
+      if (id) {
+        pingHookURL({ id: id }).then(() => {
+          this.$notify({
+            title: 'Success',
+            message: '编辑成功',
+            type: 'success',
+            duration: 2000
+          })
+        })
       }
     },
     handleCreate() {
-      this.resetAlarmRule()
+      this.resetHookURL()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    fetchHookURLList() {
-      fetchHookURLList({
-        method: this.alarmRule.method,
-        page: 1,
-        limit: 50
-      }).then((response) => {
-        this.listLoading = false
-        const { list } = response.data
-        const hooks = []
-        const hooksMap = {}
-        list.forEach((item) => {
-          const val = {
-            id: item.id,
-            name: item.name,
-            url: item.url,
-            method: item.method
-          }
-          hooksMap[item.id] = val
-          hooks.push(val)
-        })
-        this.hooks = hooks
-        this.hooksMap = hooksMap
-        console.log(this.hooks)
-      })
-    },
-    fetchModuleList(name) {
-      fetchModuleList({
-        name: name,
-        page: 1,
-        limit: 50
-      }).then((response) => {
-        this.listLoading = false
-        const { list } = response.data
-        const modules = []
-        list.forEach((item) => {
-          const val = {
-            id: item.id,
-            moduleName: item.name
-          }
-          modules.push(val)
-        })
-        this.modules = modules
-      })
-    },
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createAlarmRule(this.alarmRule).then(() => {
+          createHookURL(this.hookUrl).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -458,8 +297,8 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.alarmRule = Object.assign({}, row) // copy obj
-      console.log(this.alarmRule)
+      this.hookUrl = Object.assign({}, row) // copy obj
+      console.log(this.hookUrl)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -469,7 +308,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updateAlarmRule(this.alarmRule).then(() => {
+          updateHookURL(this.hookUrl).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -483,7 +322,7 @@ export default {
       })
     },
     handleDelete(row, index) {
-      this.alarmRule = Object.assign({}, row) // copy obj
+      this.hookUrl = Object.assign({}, row) // copy obj
       this.dialogStatus = 'delete'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -493,8 +332,8 @@ export default {
     deleteData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          deleteAlarmRule({
-            id: this.alarmRule.id
+          deleteHookURL({
+            id: this.hookUrl.id
           }).then(() => {
             this.getList()
             this.dialogFormVisible = false

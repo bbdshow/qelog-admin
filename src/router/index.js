@@ -88,13 +88,26 @@ export const constantRoutes = [{
   path: '/alarm',
   component: Layout,
   redirect: '/alarm/index',
+  meta: {
+    title: '报警管理',
+    icon: 'guide'
+  },
+  title: '报警管理',
   children: [{
     path: 'index',
     component: () => import('@/views/alarm/index'),
     name: 'Alarm',
     meta: {
-      title: '报警管理',
-      icon: 'guide',
+      title: '报警配置',
+      noCache: true
+    }
+  },
+  {
+    path: 'hook',
+    component: () => import('@/views/alarm/hook'),
+    name: 'Hook',
+    meta: {
+      title: 'Hook配置',
       noCache: true
     }
   }]

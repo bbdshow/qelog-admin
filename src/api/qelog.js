@@ -71,6 +71,44 @@ export function deleteAlarmRule(data) {
     data
   })
 }
+export function fetchHookURLList(query) {
+  return request({
+    url: '/alarm-rule/hook/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function createHookURL(data) {
+  return request({
+    url: '/alarm-rule/hook',
+    method: 'post',
+    data
+  })
+}
+
+export function updateHookURL(data) {
+  return request({
+    url: '/alarm-rule/hook',
+    method: 'put',
+    data
+  })
+}
+
+export function deleteHookURL(data) {
+  return request({
+    url: '/alarm-rule/hook',
+    method: 'delete',
+    data
+  })
+}
+export function pingHookURL(query) {
+  return request({
+    url: '/alarm-rule/hook/ping',
+    method: 'get',
+    params: query
+  })
+}
 
 // ======== 日志查询
 export function fetchLoggingList(data) {
