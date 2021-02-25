@@ -69,6 +69,11 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="模块名" prop="moduleName" align="center" width="150px">
+        <template slot-scope="{ row }">
+          <span>{{ row.moduleName }}</span>
+        </template>
+      </el-table-column>
 
       <el-table-column label="短消息" min-width="100px">
         <template slot-scope="{ row }">
