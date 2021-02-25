@@ -106,7 +106,8 @@
       </el-table-column>
       <el-table-column label="HookURL" min-width="50px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.hookId !='' ? hooksMap[row.hookId].name: '' }}</span>
+          <!-- <span>{{ row.hookId !='' ? hooksMap[row.hookId]['name']: '' }}</span> -->
+          <span>{{ hookNameFilter(row.hookId) }}</span>
         </template>
       </el-table-column>
 
@@ -282,9 +283,6 @@ export default {
         enable: -1,
         short: ''
       },
-      hookQuery: {
-        name: ''
-      },
       enableSorts: [
         { index: -1, value: '状态' },
         { index: 0, value: '关闭' },
@@ -321,7 +319,7 @@ export default {
         delete: '删除'
       },
       hooks: [],
-      hooksMap: [],
+      hooksMap: {},
       modules: [],
       rules: {
         moduleName: [
@@ -351,7 +349,7 @@ export default {
   created() {
     this.getList()
     this.fetchHookURLList()
-    this.fetchModuleList(undefined)
+    this.fetchModuleList()
   },
   methods: {
     sortsFilter(v, typ) {
@@ -364,6 +362,15 @@ export default {
           }
         }
       }
+    },
+    hookNameFilter(id) {
+      if (id && this.hooksMap) {
+        const hooks = this.hooksMap[id]
+        if (hooks) {
+          return hooks.name
+        }
+      }
+      return ''
     },
     getList() {
       this.listLoading = true
@@ -422,12 +429,10 @@ export default {
         })
         this.hooks = hooks
         this.hooksMap = hooksMap
-        console.log(this.hooks)
       })
     },
-    fetchModuleList(name) {
+    fetchModuleList() {
       fetchModuleList({
-        name: name,
         page: 1,
         limit: 150
       }).then((response) => {
