@@ -45,7 +45,12 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="3">
+            <el-form-item width="100px">
+              <el-input v-model="listQuery.forceCollectionName" placeholder="指定集合" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
             <el-form-item width="300px">
               <el-input v-model="traceId" placeholder="请输入 TraceID" />
             </el-form-item>
@@ -122,6 +127,7 @@
             >
               筛选查询
             </el-button>
+
           </el-col>
         </el-row>
         <el-row v-if="listQuery.short" :gutter="10">
@@ -267,7 +273,8 @@ export default {
         ip: undefined,
         conditionOne: undefined,
         conditionTwo: undefined,
-        conditionThree: undefined
+        conditionThree: undefined,
+        forceCollectionName: undefined
       },
       traceId: '',
       beginTime: undefined,
@@ -347,7 +354,8 @@ export default {
         ip,
         conditionOne,
         conditionTwo,
-        conditionThree
+        conditionThree,
+        forceCollectionName
       } = this.listQuery
       const data = {
         page: page,
@@ -360,6 +368,7 @@ export default {
         conditionOne: conditionOne,
         conditionTwo: conditionTwo,
         conditionThree: conditionThree,
+        forceCollectionName: forceCollectionName,
         beginTsSec: 0,
         endTsSec: 0
       }
@@ -382,10 +391,11 @@ export default {
     },
     handleTraceID() {
       this.listLoading = true
-      const { moduleName, dbIndex } = this.listQuery
+      const { moduleName, dbIndex, forceCollectionName } = this.listQuery
       const data = {
         moduleName: moduleName,
         dbIndex: dbIndex,
+        forceCollectionName: forceCollectionName,
         traceId: this.traceId
       }
       fetchLoggingByTraceID(data).then((response) => {
