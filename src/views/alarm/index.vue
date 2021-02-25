@@ -155,9 +155,7 @@
         <el-form-item label="模块名" prop="moduleName">
           <el-select
             v-model="alarmRule.moduleName"
-            :remote-method="getModuleList"
             filterable
-            remote
             class="filter-item"
             placeholder="请选择模块名"
             style="width: 100%"
@@ -431,7 +429,7 @@ export default {
       fetchModuleList({
         name: name,
         page: 1,
-        limit: 50
+        limit: 150
       }).then((response) => {
         this.listLoading = false
         const { list } = response.data
