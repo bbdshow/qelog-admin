@@ -306,6 +306,7 @@ export default {
       })
     },
     handleDelete(row, index) {
+      this.module.id = row.id
       this.dialogStatus = 'delete'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -319,6 +320,7 @@ export default {
             id: this.module.id,
             name: this.module.confrimName
           }
+          console.log(moduleData)
           deleteModule(moduleData).then(() => {
             this.getList()
             this.dialogFormVisible = false
