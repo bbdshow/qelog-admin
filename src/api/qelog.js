@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function fetchDBIndex(query) {
+export function fetchShardingIndex(query) {
   return request({
-    url: '/dbIndex',
+    url: '/shardingIndex',
     method: 'get'
   })
 }

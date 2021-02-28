@@ -9,9 +9,9 @@
       highlight-current-row
       style="width: 100%"
     >
-      <el-table-column label="DBIndex" width="135px" align="center">
+      <el-table-column label="ShardingIndex" width="135px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.dbIndex }}</span>
+          <span>{{ row.shardingIndex }}</span>
         </template>
       </el-table-column>
       <el-table-column label="时间" width="135px" align="center">
@@ -172,71 +172,71 @@
 import {
   fetchMetricsDBStats,
   fetchMetricsCollStats,
-  deleteLoggingCollection
-} from '@/api/qelog'
-import { calcNum, calcSize } from '@/utils/calc'
+  deleteLoggingCollection,
+} from "@/api/qelog";
+import { calcNum, calcSize } from "@/utils/calc";
 
 export default {
-  name: 'DBStats',
+  name: "DBStats",
   data() {
     return {
       list: null,
       listLoading: false,
       collList: null,
       collQuery: {
-        host: '',
-        dbName: ''
+        host: "",
+        dbName: "",
       },
-      dialogFormVisible: false
-    }
+      dialogFormVisible: false,
+    };
   },
   created() {
-    this.getMetricsDBStat()
+    this.getMetricsDBStat();
   },
   methods: {
     getMetricsDBStat() {
-      this.listLoading = true
+      this.listLoading = true;
       fetchMetricsDBStats().then((response) => {
-        this.list = response.data.list
-        this.listLoading = false
-      })
+        this.list = response.data.list;
+        this.listLoading = false;
+      });
     },
     handlerCollMetrics(host, dbName) {
-      this.collQuery.host = host
-      this.collQuery.dbName = dbName
-      this.listLoading = true
+      this.collQuery.host = host;
+      this.collQuery.dbName = dbName;
+      this.listLoading = true;
       fetchMetricsCollStats(this.collQuery).then((response) => {
-        this.collList = response.data.list
-        this.dialogFormVisible = true
-        console.log(this.collList)
-      })
+        this.collList = response.data.list;
+        this.dialogFormVisible = true;
+        console.log(this.collList);
+      });
       setInterval(() => {
-        this.listLoading = false
-      }, 500)
+        this.listLoading = false;
+      }, 500);
     },
     deleteColl(host, name) {
       deleteLoggingCollection({
         host: host,
-        name: name
+        name: name,
       }).then((response) => {
         this.$notify({
-          title: 'Success',
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
-        this.dialogFormVisible = false
-      })
+          title: "Success",
+          message: "删除成功",
+          type: "success",
+          duration: 2000,
+        });
+        this.dialogFormVisible = false;
+      });
     },
 
     calcSize(val) {
-      return calcSize(val)
+      return calcSize(val);
     },
     calcNum(val) {
-      return calcNum(val)
-    }
-  }
-}
+      return calcNum(val);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

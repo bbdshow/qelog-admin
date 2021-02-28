@@ -30,14 +30,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="2">
-            <el-form-item prop="dbIndex" width="100px">
+            <el-form-item prop="shardingIndex" width="100px">
               <el-select
-                v-model="listQuery.dbIndex"
+                v-model="listQuery.shardingIndex"
                 class="filter-item"
                 placeholder="选空间"
               >
                 <el-option
-                  v-for="(item, index) in historyDbIndex"
+                  v-for="(item, index) in historyShardingIndex"
                   :key="index"
                   :label="item"
                   :value="item"
@@ -47,7 +47,10 @@
           </el-col>
           <el-col :span="3">
             <el-form-item width="100px">
-              <el-input v-model="listQuery.forceCollectionName" placeholder="指定集合" />
+              <el-input
+                v-model="listQuery.forceCollectionName"
+                placeholder="指定集合"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="7">
@@ -106,9 +109,15 @@
             </el-form-item>
           </el-col>
 
-          <el-col v-if="listQuery.level != undefined && listQuery.level !== '' && listQuery.level >= -1" :span="7">
+          <el-col
+            v-if="
+              listQuery.level != undefined &&
+              listQuery.level !== '' &&
+              listQuery.level >= -1
+            "
+            :span="7"
+          >
             <el-form-item width="300px">
-
               <el-input v-model="listQuery.short" placeholder="请输入短消息" />
             </el-form-item>
           </el-col>
@@ -127,7 +136,6 @@
             >
               筛选查询
             </el-button>
-
           </el-col>
         </el-row>
         <el-row v-if="listQuery.short" :gutter="10">
@@ -248,14 +256,14 @@
 import {
   fetchModuleList,
   fetchLoggingList,
-  fetchLoggingByTraceID
-} from '@/api/qelog'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import JSONPretty from 'vue-json-pretty'
-import { startTimeSelect, endTimeSelect } from '@/utils/select.js'
+  fetchLoggingByTraceID,
+} from "@/api/qelog";
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
+import JSONPretty from "vue-json-pretty";
+import { startTimeSelect, endTimeSelect } from "@/utils/select.js";
 
 export default {
-  name: 'Logging',
+  name: "Logging",
   components: { Pagination, JSONPretty },
   data() {
     return {
@@ -267,31 +275,31 @@ export default {
         page: 1,
         limit: 20,
         moduleName: undefined,
-        dbIndex: undefined,
+        shardingIndex: undefined,
         short: undefined,
         level: undefined,
         ip: undefined,
         conditionOne: undefined,
         conditionTwo: undefined,
         conditionThree: undefined,
-        forceCollectionName: undefined
+        forceCollectionName: undefined,
       },
-      traceId: '',
+      traceId: "",
       beginTime: undefined,
       endTime: undefined,
       startTimeSelect: startTimeSelect,
       endTimeSelect: endTimeSelect,
 
-      historyDbIndex: [],
+      historyShardingIndex: [],
 
       levelSorts: [
-        { index: -1, value: 'DEBUG', type: 'info' },
-        { index: 0, value: 'INFO', type: 'info' },
-        { index: 1, value: 'WARN', type: 'warning' },
-        { index: 2, value: 'ERROR', type: 'danger' },
-        { index: 3, value: 'DPANIC', type: 'danger' },
-        { index: 4, value: 'PANIC', type: 'danger' },
-        { index: 5, value: 'FATAL', type: 'danger' }
+        { index: -1, value: "DEBUG", type: "info" },
+        { index: 0, value: "INFO", type: "info" },
+        { index: 1, value: "WARN", type: "warning" },
+        { index: 2, value: "ERROR", type: "danger" },
+        { index: 3, value: "DPANIC", type: "danger" },
+        { index: 4, value: "PANIC", type: "danger" },
+        { index: 5, value: "FATAL", type: "danger" },
       ],
       fullText: {},
       modules: [],
@@ -300,21 +308,21 @@ export default {
 
       rules: {
         moduleName: [
-          { required: true, message: '模块名称必填', trigger: 'change' }
+          { required: true, message: "模块名称必填", trigger: "change" },
         ],
 
-        dbIndex: [
+        shardingIndex: [
           {
             required: true,
-            message: '存储空间必填',
-            trigger: 'change'
-          }
-        ]
-      }
-    }
+            message: "存储空间必填",
+            trigger: "change",
+          },
+        ],
+      },
+    };
   },
   created() {
-    this.getModuleList(undefined)
+    this.getModuleList(undefined);
     // this.getList();
   },
   methods: {
@@ -322,115 +330,115 @@ export default {
       fetchModuleList({
         name: name,
         page: 1,
-        limit: 50
+        limit: 50,
       }).then((response) => {
-        this.listLoading = false
-        const { list } = response.data
-        const modules = []
-        const modulesMap = {}
+        this.listLoading = false;
+        const { list } = response.data;
+        const modules = [];
+        const modulesMap = {};
         list.forEach((item) => {
           const val = {
             id: item.id,
             moduleName: item.name,
-            dbIndex: item.dbIndex,
-            historyDbIndex: item.historyDbIndex
-          }
-          modulesMap[item.name] = val
-          modules.push(val)
-        })
-        this.modules = modules
-        this.modulesMap = modulesMap
-      })
+            shardingIndex: item.shardingIndex,
+            historyShardingIndex: item.historyShardingIndex,
+          };
+          modulesMap[item.name] = val;
+          modules.push(val);
+        });
+        this.modules = modules;
+        this.modulesMap = modulesMap;
+      });
     },
     getList() {
-      this.listLoading = true
+      this.listLoading = true;
       const {
         page,
         limit,
         moduleName,
-        dbIndex,
+        shardingIndex,
         short,
         level = -2,
         ip,
         conditionOne,
         conditionTwo,
         conditionThree,
-        forceCollectionName
-      } = this.listQuery
+        forceCollectionName,
+      } = this.listQuery;
       const data = {
         page: page,
         limit: limit,
         moduleName: moduleName,
-        dbIndex: dbIndex,
+        shardingIndex: shardingIndex,
         short: short,
-        level: level === '' ? -2 : level,
+        level: level === "" ? -2 : level,
         ip: ip,
         conditionOne: conditionOne,
         conditionTwo: conditionTwo,
         conditionThree: conditionThree,
         forceCollectionName: forceCollectionName,
         beginTsSec: 0,
-        endTsSec: 0
-      }
+        endTsSec: 0,
+      };
 
       if (this.beginTime) {
-        data.beginTsSec = Math.ceil(this.beginTime.getTime() / 1e3)
+        data.beginTsSec = Math.ceil(this.beginTime.getTime() / 1e3);
       }
       if (this.endTime) {
-        data.endTsSec = Math.ceil(this.endTime.getTime() / 1e3)
+        data.endTsSec = Math.ceil(this.endTime.getTime() / 1e3);
       }
       fetchLoggingList(data).then((response) => {
-        this.list = response.data.list
-        this.total = response.data.count
-        this.listLoading = false
-      })
+        this.list = response.data.list;
+        this.total = response.data.count;
+        this.listLoading = false;
+      });
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
     handleTraceID() {
-      this.listLoading = true
-      const { moduleName, dbIndex, forceCollectionName } = this.listQuery
+      this.listLoading = true;
+      const { moduleName, shardingIndex, forceCollectionName } = this.listQuery;
       const data = {
         moduleName: moduleName,
-        dbIndex: dbIndex,
+        shardingIndex: shardingIndex,
         forceCollectionName: forceCollectionName,
-        traceId: this.traceId
-      }
+        traceId: this.traceId,
+      };
       fetchLoggingByTraceID(data).then((response) => {
-        this.list = response.data.list
-        this.total = response.data.count
-        this.listLoading = false
-      })
+        this.list = response.data.list;
+        this.total = response.data.count;
+        this.listLoading = false;
+      });
     },
     resetListQuery() {
       this.module = {
-        name: '',
-        dbIndex: 0,
-        desc: ''
-      }
+        name: "",
+        shardingIndex: 0,
+        desc: "",
+      };
     },
     moduleChange(name) {
-      const { dbIndex, historyDbIndex } = this.modulesMap[name]
-      this.listQuery.dbIndex = dbIndex
-      historyDbIndex.push(dbIndex)
-      this.historyDbIndex = historyDbIndex
+      let { shardingIndex, historyShardingIndex } = this.modulesMap[name];
+      this.listQuery.shardingIndex = shardingIndex;
+      historyShardingIndex.push(shardingIndex);
+      this.historyShardingIndex = historyShardingIndex;
     },
     levelObj(level) {
       for (let i = 0; i < this.levelSorts.length; i++) {
         if (this.levelSorts[i].index === level) {
-          return this.levelSorts[i]
+          return this.levelSorts[i];
         }
       }
     },
     fullClick(txt) {
-      if (!txt || txt === '') {
-        return
+      if (!txt || txt === "") {
+        return;
       }
-      this.fullText = JSON.parse(txt)
-      this.dialogVisible = true
-    }
-  }
-}
+      this.fullText = JSON.parse(txt);
+      this.dialogVisible = true;
+    },
+  },
+};
 </script>

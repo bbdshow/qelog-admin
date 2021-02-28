@@ -56,14 +56,14 @@
           <span>{{ row.desc }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="空间索引" width="110px" align="center">
+      <el-table-column label="分片索引" width="110px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.dbIndex }}</span>
+          <span>{{ row.shardingIndex }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="历史空间索引" width="110px" align="center">
+      <el-table-column label="历史分片索引" width="110px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.historyDbIndex }}</span>
+          <span>{{ row.historyShardingIndex }}</span>
         </template>
       </el-table-column>
 
@@ -122,11 +122,11 @@
         <el-form-item
           v-if="dialogStatus != 'delete'"
           label="建议存储空间"
-          prop="dbIndex"
+          prop="shardingIndex"
           width="110px"
         >
           <el-select
-            v-model="module.dbIndex"
+            v-model="module.shardingIndex"
             class="filter-item"
             placeholder="Please select"
           >
@@ -160,15 +160,15 @@
 <script>
 import {
   fetchModuleList,
-  fetchDBIndex,
+  fetchShardingIndex,
   createModule,
   updateModule,
-  deleteModule
-} from '@/api/qelog'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  deleteModule,
+} from "@/api/qelog";
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
-  name: 'Module',
+  name: "Module",
   components: { Pagination },
   data() {
     return {
@@ -179,171 +179,171 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        name: undefined
+        name: undefined,
       },
       dbState: {
-        useState: []
+        useState: [],
       },
       module: {
         id: undefined,
-        name: '',
-        dbIndex: 0,
-        desc: '',
-        confrimName: undefined
+        name: "",
+        shardingIndex: 0,
+        desc: "",
+        confrimName: undefined,
       },
       dialogFormVisible: false,
-      dialogStatus: '',
+      dialogStatus: "",
       textMap: {
-        update: '编辑',
-        create: '创建',
-        delete: '删除'
+        update: "编辑",
+        create: "创建",
+        delete: "删除",
       },
       rules: {
         name: [
-          { required: true, message: 'name is required', trigger: 'change' }
+          { required: true, message: "name is required", trigger: "change" },
         ],
         confrimName: [
           {
             required: true,
-            message: 'confrimName is required',
-            trigger: 'change'
-          }
+            message: "confrimName is required",
+            trigger: "change",
+          },
         ],
-        dbIndex: [
+        shardingIndex: [
           {
             required: true,
-            message: 'dbIndex is required',
-            trigger: 'change'
-          }
-        ]
-      }
-    }
+            message: "shardingIndex is required",
+            trigger: "change",
+          },
+        ],
+      },
+    };
   },
   created() {
-    this.getList()
+    this.getList();
   },
   methods: {
     getList() {
-      this.listLoading = true
+      this.listLoading = true;
       fetchModuleList(this.listQuery).then((response) => {
-        this.list = response.data.list
-        this.total = response.data.count
+        this.list = response.data.list;
+        this.total = response.data.count;
         setTimeout(() => {
-          this.listLoading = false
-        }, 500)
-      })
+          this.listLoading = false;
+        }, 500);
+      });
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
     resetModule() {
       this.module = {
         id: undefined,
-        name: '',
-        dbIndex: 0,
-        desc: ''
-      }
+        name: "",
+        shardingIndex: 0,
+        desc: "",
+      };
     },
     handleCreate() {
-      this.resetModule()
-      fetchDBIndex().then((response) => {
-        this.dbState = response.data
-        this.module.dbIndex = this.dbState.suggestDbIndex
-        this.dialogStatus = 'create'
-        this.dialogFormVisible = true
+      this.resetModule();
+      fetchShardingIndex().then((response) => {
+        this.dbState = response.data;
+        this.module.shardingIndex = this.dbState.suggestIndex;
+        this.dialogStatus = "create";
+        this.dialogFormVisible = true;
         this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      })
+          this.$refs["dataForm"].clearValidate();
+        });
+      });
     },
     createData() {
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           createModule(this.module).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
+            this.getList();
+            this.dialogFormVisible = false;
             this.$notify({
-              title: 'Success',
-              message: '新增成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
+              title: "Success",
+              message: "新增成功",
+              type: "success",
+              duration: 2000,
+            });
+          });
         }
-      })
+      });
     },
     handleUpdate(row) {
-      fetchDBIndex().then((response) => {
-        this.dbState = response.data
-        this.module = Object.assign({}, row) // copy obj
-        this.dialogStatus = 'update'
-        this.dialogFormVisible = true
+      fetchShardingIndex().then((response) => {
+        this.dbState = response.data;
+        this.module = Object.assign({}, row); // copy obj
+        this.dialogStatus = "update";
+        this.dialogFormVisible = true;
         this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      })
+          this.$refs["dataForm"].clearValidate();
+        });
+      });
     },
     updateData() {
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           const moduleData = {
             id: this.module.id,
-            dbIndex: this.module.dbIndex,
-            desc: this.module.desc
-          }
+            shardingIndex: this.module.shardingIndex,
+            desc: this.module.desc,
+          };
           updateModule(moduleData).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
+            this.getList();
+            this.dialogFormVisible = false;
             this.$notify({
-              title: 'Success',
-              message: '编辑成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
+              title: "Success",
+              message: "编辑成功",
+              type: "success",
+              duration: 2000,
+            });
+          });
         }
-      })
+      });
     },
     handleDelete(row, index) {
-      this.module.id = row.id
-      this.dialogStatus = 'delete'
-      this.dialogFormVisible = true
+      this.module.id = row.id;
+      this.dialogStatus = "delete";
+      this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+        this.$refs["dataForm"].clearValidate();
+      });
     },
     deleteData() {
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           const moduleData = {
             id: this.module.id,
-            name: this.module.confrimName
-          }
-          console.log(moduleData)
+            name: this.module.confrimName,
+          };
+          console.log(moduleData);
           deleteModule(moduleData).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
+            this.getList();
+            this.dialogFormVisible = false;
             this.$notify({
-              title: 'Success',
-              message: '删除成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
+              title: "Success",
+              message: "删除成功",
+              type: "success",
+              duration: 2000,
+            });
+          });
         }
-      })
+      });
     },
     handleConfrim(dialogStatus) {
       switch (dialogStatus) {
-        case 'create':
-          return this.createData()
-        case 'update':
-          return this.updateData()
-        case 'delete':
-          return this.deleteData()
+        case "create":
+          return this.createData();
+        case "update":
+          return this.updateData();
+        case "delete":
+          return this.deleteData();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
