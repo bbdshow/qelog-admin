@@ -16,7 +16,7 @@
                 filterable
                 remote
                 class="filter-item"
-                placeholder="请选择模块名"
+                placeholder="请选择模块名(可搜索)"
                 style="width: 100%"
                 @change="moduleChange"
               >
