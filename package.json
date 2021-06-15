@@ -26,10 +26,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/huzhongqing/qelog-admin.git"
+    "url": "git+https://github.com/bbdshow/qelog-admin.git"
   },
   "bugs": {
-    "url": "https://github.com/huzhongqing/qelog-admin/issues"
+    "url": "https://github.com/bbdshow/qelog-admin/issues"
   },
   "dependencies": {
     "axios": "0.18.1",
