@@ -56,14 +56,19 @@
           <span>{{ row.desc }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="分片索引" width="110px" align="center">
+      <el-table-column label="Bucket" width="110px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.shardingIndex }}</span>
+          <span>{{ row.bucket }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="历史分片索引" width="110px" align="center">
+      <el-table-column label="间隔(天)" width="110px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.historyShardingIndex }}</span>
+          <span>{{ row.daySpan === 0 ? 31 : row.daySpan }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="最长存储(月)" width="110px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.maxMonth === 0 ? "永久" : row.maxMonth }}</span>
         </template>
       </el-table-column>
 
@@ -104,7 +109,7 @@
         :model="module"
         :rules="rules"
         label-position="left"
-        label-width="120px"
+        label-width="150"
         style="width: 400px; margin-left: 50px"
       >
         <el-form-item label="模块名" prop="name">
@@ -120,24 +125,62 @@
         </el-form-item>
 
         <el-form-item
-          v-if="dialogStatus != 'delete'"
-          label="建议存储空间"
-          prop="shardingIndex"
-          width="110px"
+          v-if="dialogStatus !== 'delete'"
+          label="间隔(天)"
+          prop="daySpan"
         >
-          <el-select
-            v-model="module.shardingIndex"
-            class="filter-item"
-            placeholder="Please select"
-          >
-            <el-option
-              v-for="item in dbState.useState"
-              :key="item.index"
-              :label="`空间 ${item.index} 已使用  ${item.use}`"
-              :value="item.index"
-            />
-          </el-select>
+          <el-input
+            v-model="module.daySpan"
+            placeholder="按天分集合，最大31天, 0等于设置31天"
+          />
         </el-form-item>
+        <el-form-item
+          v-if="dialogStatus !== 'delete'"
+          label="最长存储(月)"
+          prop="daySpan"
+        >
+          <el-input
+            v-model="module.maxMonth"
+            placeholder="最长存储时间，0等于设置永久"
+          />
+        </el-form-item>
+
+        <el-form-item
+          v-if="dialogStatus == 'update'"
+          label="存储集合前缀(谨慎修改)"
+          prop="prefix"
+          label-width="100"
+        >
+          <el-input
+            v-model="module.prefix"
+            placeholder="存储集合前缀，当存在数据，修改后，之前的数据无法查询,一般不用修改"
+          />
+        </el-form-item>
+
+        <el-form-item
+          v-if="dialogStatus == 'update'"
+          label="Bucket(谨慎修改)"
+          prop="bucket"
+          label-width="100"
+        >
+          <el-input
+            v-model="module.bucket"
+            placeholder="存储仓库，当存在数据，修改后，之前的数据无法查询"
+          />
+        </el-form-item>
+
+        <el-form-item
+          v-if="dialogStatus == 'update'"
+          label="存储数据库(谨慎修改)"
+          prop="database"
+          label-width="100"
+        >
+          <el-input
+            v-model="module.database"
+            placeholder="存储库，当存在数据，修改后，之前的数据无法查询"
+          />
+        </el-form-item>
+
         <el-form-item v-if="dialogStatus != 'delete'" label="描述">
           <el-input
             v-model="module.desc"
@@ -181,15 +224,16 @@ export default {
         limit: 20,
         name: undefined,
       },
-      dbState: {
-        useState: [],
-      },
       module: {
         id: undefined,
         name: "",
-        shardingIndex: 0,
+        daySpan: 0,
+        maxMonth: 0,
         desc: "",
         confrimName: undefined,
+        bucket: undefined,
+        database: undefined,
+        prefix: undefined,
       },
       dialogFormVisible: false,
       dialogStatus: "",
@@ -206,13 +250,6 @@ export default {
           {
             required: true,
             message: "confrimName is required",
-            trigger: "change",
-          },
-        ],
-        shardingIndex: [
-          {
-            required: true,
-            message: "shardingIndex is required",
             trigger: "change",
           },
         ],
@@ -247,20 +284,22 @@ export default {
     },
     handleCreate() {
       this.resetModule();
-      fetchShardingIndex().then((response) => {
-        this.dbState = response.data;
-        this.module.shardingIndex = this.dbState.suggestIndex;
-        this.dialogStatus = "create";
-        this.dialogFormVisible = true;
-        this.$nextTick(() => {
-          this.$refs["dataForm"].clearValidate();
-        });
+      this.dialogStatus = "create";
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs["dataForm"].clearValidate();
       });
     },
     createData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          createModule(this.module).then(() => {
+          const moduleReq = {
+            name: this.module.name,
+            daySpan: Number(this.module.daySpan),
+            maxMonth: Number(this.module.maxMonth),
+            desc: this.module.desc,
+          };
+          createModule(moduleReq).then(() => {
             this.getList();
             this.dialogFormVisible = false;
             this.$notify({
@@ -274,25 +313,26 @@ export default {
       });
     },
     handleUpdate(row) {
-      fetchShardingIndex().then((response) => {
-        this.dbState = response.data;
-        this.module = Object.assign({}, row); // copy obj
-        this.dialogStatus = "update";
-        this.dialogFormVisible = true;
-        this.$nextTick(() => {
-          this.$refs["dataForm"].clearValidate();
-        });
+      this.module = Object.assign({}, row); // copy obj
+      this.dialogStatus = "update";
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs["dataForm"].clearValidate();
       });
     },
     updateData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          const moduleData = {
+          const moduleReq = {
             id: this.module.id,
-            shardingIndex: this.module.shardingIndex,
+            bucket: this.module.bucket,
+            daySpan: Number(this.module.daySpan),
+            maxMonth: Number(this.module.maxMonth),
+            database: this.module.database,
+            prefix: this.module.prefix,
             desc: this.module.desc,
           };
-          updateModule(moduleData).then(() => {
+          updateModule(moduleReq).then(() => {
             this.getList();
             this.dialogFormVisible = false;
             this.$notify({

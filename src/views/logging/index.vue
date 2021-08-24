@@ -18,7 +18,6 @@
                 class="filter-item"
                 placeholder="请选择模块名(可搜索)"
                 style="width: 100%"
-                @change="moduleChange"
               >
                 <el-option
                   v-for="item in modules"
@@ -30,19 +29,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="2">
-            <el-form-item prop="shardingIndex" width="100px">
-              <el-select
-                v-model="listQuery.shardingIndex"
-                class="filter-item"
-                placeholder="选空间"
-              >
-                <el-option
-                  v-for="(item, index) in historyShardingIndex"
-                  :key="index"
-                  :label="item"
-                  :value="item"
-                />
-              </el-select>
+            <el-form-item width="100px">
+              <el-input
+                v-model="listQuery.forceDatabase"
+                placeholder="指定存储库"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="3">
@@ -275,7 +266,6 @@ export default {
         page: 1,
         limit: 20,
         moduleName: undefined,
-        shardingIndex: undefined,
         short: undefined,
         level: undefined,
         ip: undefined,
@@ -283,14 +273,13 @@ export default {
         conditionTwo: undefined,
         conditionThree: undefined,
         forceCollectionName: undefined,
+        forceDatabase: undefined,
       },
       traceId: "",
       beginTime: undefined,
       endTime: undefined,
       startTimeSelect: startTimeSelect,
       endTimeSelect: endTimeSelect,
-
-      historyShardingIndex: [],
 
       levelSorts: [
         { index: -1, value: "DEBUG", type: "info" },
@@ -309,14 +298,6 @@ export default {
       rules: {
         moduleName: [
           { required: true, message: "模块名称必填", trigger: "change" },
-        ],
-
-        shardingIndex: [
-          {
-            required: true,
-            message: "存储空间必填",
-            trigger: "change",
-          },
         ],
       },
     };
@@ -340,8 +321,6 @@ export default {
           const val = {
             id: item.id,
             moduleName: item.name,
-            shardingIndex: item.shardingIndex,
-            historyShardingIndex: item.historyShardingIndex,
           };
           modulesMap[item.name] = val;
           modules.push(val);
@@ -356,7 +335,6 @@ export default {
         page,
         limit,
         moduleName,
-        shardingIndex,
         short,
         level = -2,
         ip,
@@ -364,12 +342,12 @@ export default {
         conditionTwo,
         conditionThree,
         forceCollectionName,
+        forceDatabase,
       } = this.listQuery;
       const data = {
         page: page,
         limit: limit,
         moduleName: moduleName,
-        shardingIndex: shardingIndex,
         short: short,
         level: level === "" ? -2 : level,
         ip: ip,
@@ -377,6 +355,7 @@ export default {
         conditionTwo: conditionTwo,
         conditionThree: conditionThree,
         forceCollectionName: forceCollectionName,
+        forceDatabase: forceDatabase,
         beginTsSec: 0,
         endTsSec: 0,
       };
@@ -399,10 +378,10 @@ export default {
     },
     handleTraceID() {
       this.listLoading = true;
-      const { moduleName, shardingIndex, forceCollectionName } = this.listQuery;
+      const { moduleName, forceDatabase, forceCollectionName } = this.listQuery;
       const data = {
         moduleName: moduleName,
-        shardingIndex: shardingIndex,
+        forceDatabase: forceDatabase,
         forceCollectionName: forceCollectionName,
         traceId: this.traceId,
       };
@@ -415,15 +394,8 @@ export default {
     resetListQuery() {
       this.module = {
         name: "",
-        shardingIndex: 0,
         desc: "",
       };
-    },
-    moduleChange(name) {
-      let { shardingIndex, historyShardingIndex } = this.modulesMap[name];
-      this.listQuery.shardingIndex = shardingIndex;
-      historyShardingIndex.push(shardingIndex);
-      this.historyShardingIndex = historyShardingIndex;
     },
     levelObj(level) {
       for (let i = 0; i < this.levelSorts.length; i++) {
