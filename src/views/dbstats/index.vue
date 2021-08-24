@@ -1,22 +1,40 @@
 <template>
-  <div>
+  <div class="app-container">
+    <div class="filter-container">
+      <el-row :gutter="30">
+        <el-col :span="4">
+          <el-input
+            v-model="listQuery.name"
+            placeholder="模块名称"
+            class="filter-item"
+            @keyup.enter.native="handleFilter"
+          />
+        </el-col>
+        <el-col :span="4">
+          <el-button
+            class="filter-item"
+            type="primary"
+            icon="el-icon-search"
+            @click="handleFilter"
+          >
+            搜索
+          </el-button>
+        </el-col>
+      </el-row>
+    </div>
+
     <el-table
       :key="0"
       v-loading="listLoading"
-      :data="list"
+      :data="dbList"
       border
       fit
       highlight-current-row
       style="width: 100%"
     >
-      <el-table-column label="ShardingIndex" width="135px" align="center">
+      <el-table-column label="更新时间" width="135px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.shardingIndex }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="时间" width="135px" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.createdTsSec | parseTime("{y}-{m}-{d} {h}:{i}") }}</span>
+          <span>{{ row.updatedTsSec | parseTime("{y}-{m}-{d} {h}:{i}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="HOST" align="center">
@@ -63,23 +81,72 @@
           <span>{{ row.indexs }}</span>
         </template>
       </el-table-column>
+    </el-table>
+
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+    >
+      <el-table-column label="更新时间" width="150px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.updatedTsSec | parseTime("{y}-{m}-{d} {h}:{i}") }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="模块名" min-width="100px">
+        <template slot-scope="{ row }">
+          <span>{{ row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="描述" min-width="150px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.desc }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Bucket" width="110px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.bucket }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="间隔(天)" width="110px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.daySpan === 0 ? 31 : row.daySpan }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="最长存储(月)" width="110px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.maxMonth === 0 ? "永久" : row.maxMonth }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column
         label="操作"
         align="center"
-        width="150"
+        width="230"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row }">
           <el-button
             type="primary"
             size="mini"
-            @click="handlerCollMetrics(row.host, row.dbName)"
+            @click="handlerCollMetrics(row.name)"
           >
             集合容量
           </el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
 
     <el-dialog title="集合容量" :visible.sync="dialogFormVisible" width="90%">
       <el-table
@@ -157,7 +224,7 @@
               icon="el-icon-info"
               icon-color="red"
               :title="`您确定删除 ${row.name} 集合吗？删除操作不可逆`"
-              @onConfirm="deleteColl(row.host, row.name)"
+              @onConfirm="deleteColl(row)"
             >
               <el-button slot="reference" type="danger">删除集合</el-button>
             </el-popconfirm>
@@ -173,51 +240,70 @@ import {
   fetchMetricsDBStats,
   fetchMetricsCollStats,
   deleteLoggingCollection,
+  fetchModuleList,
 } from "@/api/qelog";
 import { calcNum, calcSize } from "@/utils/calc";
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
   name: "DBStats",
+  components: { Pagination },
   data() {
     return {
       list: null,
+      total: 0,
       listLoading: false,
       collList: null,
-      collQuery: {
-        host: "",
-        dbName: "",
+      listQuery: {
+        page: 1,
+        limit: 20,
+        moduleName: undefined,
       },
+      dbList: null,
       dialogFormVisible: false,
     };
   },
   created() {
     this.getMetricsDBStat();
+    this.getList();
   },
   methods: {
+    getList() {
+      this.listLoading = true;
+      fetchModuleList(this.listQuery).then((response) => {
+        this.list = response.data.list;
+        this.total = response.data.count;
+        setTimeout(() => {
+          this.listLoading = false;
+        }, 500);
+      });
+    },
+    handleFilter() {
+      this.listQuery.page = 1;
+      this.getList();
+    },
     getMetricsDBStat() {
       this.listLoading = true;
       fetchMetricsDBStats().then((response) => {
-        this.list = response.data.list;
+        this.dbList = response.data.list;
         this.listLoading = false;
       });
     },
-    handlerCollMetrics(host, dbName) {
-      this.collQuery.host = host;
-      this.collQuery.dbName = dbName;
+    handlerCollMetrics(name) {
       this.listLoading = true;
-      fetchMetricsCollStats(this.collQuery).then((response) => {
+      fetchMetricsCollStats({ moduleName: name }).then((response) => {
         this.collList = response.data.list;
         this.dialogFormVisible = true;
-        console.log(this.collList);
+        // console.log(this.collList);
       });
       setInterval(() => {
         this.listLoading = false;
       }, 500);
     },
-    deleteColl(host, name) {
+    deleteColl(row) {
       deleteLoggingCollection({
-        host: host,
-        name: name,
+        moduleName: row.moduleName,
+        collection: row.name,
       }).then((response) => {
         this.$notify({
           title: "Success",
@@ -225,7 +311,7 @@ export default {
           type: "success",
           duration: 2000,
         });
-        this.dialogFormVisible = false;
+        this.handlerCollMetrics(row.moduleName);
       });
     },
 
