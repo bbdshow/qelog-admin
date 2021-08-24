@@ -1,12 +1,5 @@
 import request from '@/utils/request'
 
-export function fetchShardingIndex(query) {
-  return request({
-    url: '/shardingIndex',
-    method: 'get'
-  })
-}
-
 export function fetchModuleList(query) {
   return request({
     url: '/module/list',

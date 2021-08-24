@@ -203,7 +203,6 @@
 <script>
 import {
   fetchModuleList,
-  fetchShardingIndex,
   createModule,
   updateModule,
   deleteModule,
