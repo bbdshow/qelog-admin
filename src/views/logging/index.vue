@@ -18,6 +18,7 @@
                 class="filter-item"
                 placeholder="请选择模块名(可搜索)"
                 style="width: 100%"
+                @change="resetListQueryFilter"
               >
                 <el-option
                   v-for="item in modules"
@@ -89,6 +90,7 @@
                 clearable
                 class="filter-item"
                 placeholder="选等级"
+                @clear="resetListQueryFilter"
               >
                 <el-option
                   v-for="item in levelSorts"
@@ -410,6 +412,13 @@ export default {
       }
       this.fullText = JSON.parse(txt);
       this.dialogVisible = true;
+    },
+    resetListQueryFilter() {
+      this.listQuery.short = "";
+      this.listQuery.ip = "";
+      this.listQuery.conditionOne = "";
+      this.listQuery.conditionTwo = "";
+      this.listQuery.conditionThree = "";
     },
   },
 };

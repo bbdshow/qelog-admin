@@ -144,7 +144,6 @@
         <el-form-item label="关键字" prop="keyWord">
           <el-input v-model="hookUrl.keyWord" />
         </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false"> 取消 </el-button>
@@ -162,17 +161,17 @@ import {
   createHookURL,
   updateHookURL,
   deleteHookURL,
-  pingHookURL
-} from '@/api/qelog'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  pingHookURL,
+} from "@/api/qelog";
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
-  name: 'Hook',
+  name: "Hook",
   components: { Pagination },
   filters: {
     enableFilter(enable) {
-      return enable ? 'success' : 'danger'
-    }
+      return enable ? "success" : "danger";
+    },
   },
 
   data() {
@@ -184,179 +183,176 @@ export default {
         id: undefined,
         page: 1,
         limit: 20,
-        name: '',
-        keyWord: ''
+        name: "",
+        keyWord: "",
       },
-      methodSorts: [
-        { index: 1, value: 'DingDing' }
-      ],
+      methodSorts: [{ index: 1, value: "DingDing" }],
       hookUrl: {
         id: undefined,
-        name: '',
-        keyWord: '',
+        name: "",
+        keyWord: "",
         method: 1,
-        url: ''
+        url: "",
       },
       dialogFormVisible: false,
-      dialogStatus: '',
+      dialogStatus: "",
       textMap: {
-        update: '编辑',
-        create: '创建',
-        delete: '删除'
+        update: "编辑",
+        create: "创建",
+        delete: "删除",
       },
       rules: {
         name: [
           {
             required: true,
-            message: 'name is required',
-            trigger: 'change'
-          }
+            message: "name is required",
+            trigger: "change",
+          },
         ],
         url: [
           {
             required: true,
-            message: 'url is required',
-            trigger: 'change'
-          }
-        ]
-      }
-    }
+            message: "url is required",
+            trigger: "change",
+          },
+        ],
+      },
+    };
   },
   created() {
-    this.getList()
+    this.getList();
   },
   methods: {
     sortsFilter(v, typ) {
-      const sorts = this[typ]
+      const sorts = this[typ];
       if (sorts) {
         for (let i = 0; i < sorts.length; i++) {
-          const { index, value } = sorts[i]
+          const { index, value } = sorts[i];
           if (index === v) {
-            return value
+            return value;
           }
         }
       }
     },
     getList() {
-      this.listLoading = true
+      this.listLoading = true;
       fetchHookURLList(this.listQuery).then((response) => {
-        this.list = response.data.list
-        this.total = response.data.count
+        this.list = response.data.list;
+        this.total = response.data.count;
         setTimeout(() => {
-          this.listLoading = false
-        }, 500)
-      })
+          this.listLoading = false;
+        }, 500);
+      });
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
     resetHookURL() {
       this.hookUrl = {
         id: undefined,
-        name: '',
-        keyWord: '',
+        name: "",
+        keyWord: "",
         method: 1,
-        url: ''
-      }
+        url: "",
+      };
     },
     pingHookURL(id) {
       if (id) {
         pingHookURL({ id: id }).then(() => {
           this.$notify({
-            title: 'Success',
-            message: '编辑成功',
-            type: 'success',
-            duration: 2000
-          })
-        })
+            title: "Success",
+            type: "success",
+            duration: 2000,
+          });
+        });
       }
     },
     handleCreate() {
-      this.resetHookURL()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
+      this.resetHookURL();
+      this.dialogStatus = "create";
+      this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+        this.$refs["dataForm"].clearValidate();
+      });
     },
     createData() {
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           createHookURL(this.hookUrl).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
+            this.getList();
+            this.dialogFormVisible = false;
             this.$notify({
-              title: 'Success',
-              message: '新增成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
+              title: "Success",
+              message: "新增成功",
+              type: "success",
+              duration: 2000,
+            });
+          });
         }
-      })
+      });
     },
     handleUpdate(row) {
-      this.hookUrl = Object.assign({}, row) // copy obj
-      console.log(this.hookUrl)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
+      this.hookUrl = Object.assign({}, row); // copy obj
+      console.log(this.hookUrl);
+      this.dialogStatus = "update";
+      this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+        this.$refs["dataForm"].clearValidate();
+      });
     },
     updateData() {
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           updateHookURL(this.hookUrl).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
+            this.getList();
+            this.dialogFormVisible = false;
             this.$notify({
-              title: 'Success',
-              message: '编辑成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
+              title: "Success",
+              message: "编辑成功",
+              type: "success",
+              duration: 2000,
+            });
+          });
         }
-      })
+      });
     },
     handleDelete(row, index) {
-      this.hookUrl = Object.assign({}, row) // copy obj
-      this.dialogStatus = 'delete'
-      this.dialogFormVisible = true
+      this.hookUrl = Object.assign({}, row); // copy obj
+      this.dialogStatus = "delete";
+      this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+        this.$refs["dataForm"].clearValidate();
+      });
     },
     deleteData() {
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           deleteHookURL({
-            id: this.hookUrl.id
+            id: this.hookUrl.id,
           }).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
+            this.getList();
+            this.dialogFormVisible = false;
             this.$notify({
-              title: 'Success',
-              message: '删除成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
+              title: "Success",
+              message: "删除成功",
+              type: "success",
+              duration: 2000,
+            });
+          });
         }
-      })
+      });
     },
     handleConfrim(dialogStatus) {
       switch (dialogStatus) {
-        case 'create':
-          return this.createData()
-        case 'update':
-          return this.updateData()
-        case 'delete':
-          return this.deleteData()
+        case "create":
+          return this.createData();
+        case "update":
+          return this.updateData();
+        case "delete":
+          return this.deleteData();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
