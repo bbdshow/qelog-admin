@@ -1,11 +1,13 @@
 import axios from 'axios'
+import router from '@/router'
 import {
   MessageBox,
   Message
 } from 'element-ui'
 import store from '@/store'
 import {
-  getToken
+  getToken,
+  removeToken
 } from '@/utils/auth'
 
 // create an axios instance
@@ -34,7 +36,7 @@ service.interceptors.request.use(
     return Promise.reject(error)
   }
 )
-
+const authInvalidCodes = [10,11,12,13]
 // response interceptor
 service.interceptors.response.use(
   /**
@@ -58,7 +60,7 @@ service.interceptors.response.use(
       })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 401) {
+      if (authInvalidCodes.indexOf(res.code) !== -1) {
         // to re-login
         MessageBox.confirm(`${res.message} 您即将退出，可选择重新登录`, '确认退出', {
           confirmButtonText: '重新登录',
@@ -76,12 +78,34 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 10 * 1000
-    })
+    console.log(error.response) // for debug
+    if (error && error.response.status == 401) {
+      // auth invalid
+         // to re-login
+         MessageBox.confirm(`${error.response.data.message} 您即将退出，可选择重新登录`, '确认退出', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('user/resetToken').then(() => {
+            router.push({path:'/login'})
+          })
+        })
+
+      // Message({
+      //   message: error.response.data.message || 'auth invalid',
+      //   type: 'error',
+      //   duration: 3 * 1000
+      // })
+      // removeToken()
+      // router.push({path:'/login'})
+    }else {
+      Message({
+        message: error.message,
+        type: 'error',
+        duration: 10 * 1000
+      })
+    }
     return Promise.reject(error)
   }
 )
