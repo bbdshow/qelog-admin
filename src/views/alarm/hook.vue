@@ -137,10 +137,24 @@
             />
           </el-select>
         </el-form-item>
-
-        <el-form-item label="HookURL" prop="url">
-          <el-input v-model="hookUrl.url" />
-        </el-form-item>
+        <el-row>
+          <el-col :span="20">
+              <el-form-item label="HookURL" prop="url">
+                    <el-input v-model="hookUrl.url" icon="el-icon-question" />
+              </el-form-item>
+          </el-col>
+          <el-col :span="4">
+               <el-popover
+                 placement="top-start"
+                 title="URL格式"
+                 width="400"
+                 trigger="hover">
+                  <p>DingDing:https://oapi.dingtalk.com/robot/send?access_token={token}</p>
+                  <p>Telegram:https://api.telegram.org/bot{token}/sendMessage?chat_id={chatId}</p>
+                 <el-button slot="reference" icon="el-icon-question" circle type="text" ></el-button>
+               </el-popover>
+          </el-col>
+        </el-row>
         <el-form-item label="关键字" prop="keyWord">
           <el-input v-model="hookUrl.keyWord" />
         </el-form-item>
@@ -186,7 +200,7 @@ export default {
         name: "",
         keyWord: "",
       },
-      methodSorts: [{ index: 1, value: "DingDing" }],
+      methodSorts: [{ index: 1, value: "DingDing" },{ index: 2, value: "Telegram" }],
       hookUrl: {
         id: undefined,
         name: "",
