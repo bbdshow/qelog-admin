@@ -195,6 +195,7 @@
             v-model="alarmRule.method"
             class="filter-item"
             placeholder="Please select"
+            @change="fetchHookURLList"
           >
             <el-option
               v-for="item in methodSorts"
@@ -308,7 +309,7 @@ export default {
         level: 0,
         tag: '',
         rateSec: 30,
-        method: 1,
+        method: 0,
         hookId: '',
         enabel: -1
       },
@@ -395,7 +396,7 @@ export default {
         level: -1,
         tag: '',
         rateSec: 30,
-        method: 1,
+        method: 0,
         hookId: '',
         enabel: true
       }
@@ -430,6 +431,7 @@ export default {
         })
         this.hooks = hooks
         this.hooksMap = hooksMap
+        this.alarmRule.hookId = ""
       })
     },
     fetchModuleList() {
