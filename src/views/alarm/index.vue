@@ -298,7 +298,8 @@ export default {
         { index: 5, value: 'FATAL' }
       ],
       methodSorts: [
-        { index: 1, value: 'DingDing' }
+        { index: 1, value: 'DingDing' },
+        { index: 2, value: 'Telegram' }
       ],
       alarmRule: {
         id: undefined,
