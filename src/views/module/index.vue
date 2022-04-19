@@ -113,7 +113,7 @@
         style="width: 400px; margin-left: 50px"
       >
         <el-form-item label="模块名" prop="name">
-          <el-input v-model="module.name" />
+          <el-input v-model="module.name" placeholder="设置接入项目的名称"/>
         </el-form-item>
 
         <el-form-item
@@ -126,34 +126,34 @@
 
         <el-form-item
           v-if="dialogStatus !== 'delete'"
-          label="间隔(天)"
+          label="时间分片(天)"
           prop="daySpan"
         >
           <el-input
             v-model="module.daySpan"
-            placeholder="按天分集合，最大31天, 0等于设置31天"
+            placeholder="日志根据时间分片,X/天,最大31天, 默认31天"
           />
         </el-form-item>
         <el-form-item
           v-if="dialogStatus !== 'delete'"
           label="最长存储(月)"
-          prop="daySpan"
+          prop="maxMonth"
         >
           <el-input
             v-model="module.maxMonth"
-            placeholder="最长存储时间，0等于设置永久"
+            placeholder="最长存储时间,默认永久"
           />
         </el-form-item>
 
         <el-form-item
           v-if="dialogStatus == 'update'"
-          label="存储集合前缀(谨慎修改)"
+          label="集合前缀(谨慎修改)"
           prop="prefix"
           label-width="100"
         >
           <el-input
             v-model="module.prefix"
-            placeholder="存储集合前缀，当存在数据，修改后，之前的数据无法查询,一般不用修改"
+            placeholder="存储集合前缀,修改后,老数据必需指定集合查询"
           />
         </el-form-item>
 
@@ -165,7 +165,7 @@
         >
           <el-input
             v-model="module.bucket"
-            placeholder="存储仓库，当存在数据，修改后，之前的数据无法查询"
+            placeholder="存储仓库，修改后,老数据必需指定此BUCKET关联的数据库查询"
           />
         </el-form-item>
 
@@ -177,14 +177,14 @@
         >
           <el-input
             v-model="module.database"
-            placeholder="存储库，当存在数据，修改后，之前的数据无法查询"
+            placeholder="数据库，修改后,老数据必需指定数据库查询"
           />
         </el-form-item>
 
         <el-form-item v-if="dialogStatus != 'delete'" label="描述">
           <el-input
             v-model="module.desc"
-            :autosize="{ minRows: 2, maxRows: 4 }"
+            :autosize="{ minRows: 1, maxRows: 2 }"
             type="textarea"
             placeholder="Please input"
           />

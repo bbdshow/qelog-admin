@@ -129,6 +129,16 @@
             >
               筛选查询
             </el-button>
+            <el-popover
+                 placement="top-start"
+                 title="查询帮助"
+                 width="400"
+                 trigger="hover">
+                  <p>跟踪查询:必需填入TraceID,可查询出所有绑定此ID的日志</p>
+                  <p>筛选查询:如需使用查询条件,必需先指定日志等级</p>
+                  <p>1.指定等级 2.指定短消息 3.可指定IP 4.筛选条件1,2,3</p>
+                 <el-button slot="reference" icon="el-icon-question" circle type="text"></el-button>
+            </el-popover>
           </el-col>
         </el-row>
         <el-row v-if="listQuery.short" :gutter="10">

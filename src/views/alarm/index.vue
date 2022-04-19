@@ -172,14 +172,14 @@
         </el-form-item>
 
         <el-form-item label="短消息" prop="short">
-          <el-input v-model="alarmRule.short" />
+          <el-input v-model="alarmRule.short" placeholder="日志信息短消息头"/>
         </el-form-item>
 
         <el-form-item label="等级" prop="level" min-width="80px">
           <el-select
             v-model="alarmRule.level"
             class="filter-item"
-            placeholder="Please select"
+            placeholder="请选择"
           >
             <el-option
               v-for="item in levelSorts"
@@ -194,7 +194,7 @@
           <el-select
             v-model="alarmRule.method"
             class="filter-item"
-            placeholder="Please select"
+            placeholder="请选择"
             @change="fetchHookURLList"
           >
             <el-option
@@ -211,7 +211,7 @@
             v-model="alarmRule.hookId"
             filterable
             class="filter-item"
-            placeholder="请选择HookURL"
+            placeholder="请选择"
             style="width: 100%"
           >
             <el-option
@@ -225,6 +225,15 @@
 
         <el-form-item label="频率间隔(秒)" prop="rateSec">
           <el-input-number v-model="alarmRule.rateSec" />
+          <el-popover
+              placement="top-start"
+              title="频率规则"
+              width="400"
+              trigger="hover">
+               <p>间隔多少秒发送1条,例如30,则每个receiver实例同一短消息30秒内只发送1条</p>
+               <p>数值 0 : 每条都发送</p>
+              <el-button slot="reference" icon="el-icon-question" circle type="text" ></el-button>
+          </el-popover>
         </el-form-item>
         <el-form-item
           v-if="dialogStatus == 'update'"
@@ -238,8 +247,8 @@
           />
         </el-form-item>
 
-        <el-form-item label="标签" prop="tag">
-          <el-input v-model="alarmRule.tag" />
+        <el-form-item label="标签(选填)" prop="tag">
+          <el-input v-model="alarmRule.tag" placeholder="可通过报警信息快速明确分组" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -309,7 +318,7 @@ export default {
         level: 0,
         tag: '',
         rateSec: 30,
-        method: 0,
+        method: '',
         hookId: '',
         enabel: -1
       },
@@ -396,7 +405,7 @@ export default {
         level: -1,
         tag: '',
         rateSec: 30,
-        method: 0,
+        method: '',
         hookId: '',
         enabel: true
       }
@@ -411,7 +420,7 @@ export default {
     },
     fetchHookURLList() {
       fetchHookURLList({
-        method: this.alarmRule.method,
+        method: this.alarmRule.method || 0,
         page: 1,
         limit: 50
       }).then((response) => {

@@ -120,6 +120,7 @@
           <el-input
             v-model="hookUrl.name"
             :disabled="dialogStatus != 'create'"
+            placeholder="报警机器人名称"
           />
         </el-form-item>
 
@@ -127,7 +128,7 @@
           <el-select
             v-model="hookUrl.method"
             class="filter-item"
-            placeholder="Please select"
+            placeholder="请选择"
           >
             <el-option
               v-for="item in methodSorts"
@@ -140,7 +141,7 @@
         <el-row>
           <el-col :span="20">
               <el-form-item label="HookURL" prop="url">
-                    <el-input v-model="hookUrl.url" icon="el-icon-question" />
+                    <el-input v-model="hookUrl.url" icon="el-icon-question" placeholder="参考报警URL格式"/>
               </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -155,8 +156,8 @@
                </el-popover>
           </el-col>
         </el-row>
-        <el-form-item label="关键字" prop="keyWord">
-          <el-input v-model="hookUrl.keyWord" />
+        <el-form-item label="关键字(选填)" prop="keyWord">
+          <el-input v-model="hookUrl.keyWord" placeholder="默认[QELOG],关键字可通过钉钉报警限制" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
